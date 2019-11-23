@@ -8,12 +8,7 @@ public class Id {
     private String github;
     private String userid;
 
-    public Id (String name, String github, String userid) {
-        this.name = name;
-        this.github = github;
-        this.userid = userid;
-    }
-    public Id (String name, String github) {
+    public Id (String github, String name) {
         this.name = name;
         this.github = github;
     }

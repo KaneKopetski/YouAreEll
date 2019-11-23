@@ -39,6 +39,17 @@ public class IdController {
         for (Id idInList : idList) {
             if (idInList.getGithub().equals(id.getGithub())) {
                 foundId = idInList;
+            }
+        } return foundId;
+    }
+
+    public Id findByGitId(String gitId) {
+        ArrayList<Id> idList = parseIds(getIds());
+        Id foundId = null;
+
+        for (Id idInList : idList) {
+            if (gitId.equals(idInList.getGithub())) {
+                foundId = idInList;
             } else {
                 foundId = null;
             }

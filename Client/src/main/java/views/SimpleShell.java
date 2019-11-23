@@ -24,7 +24,6 @@ public class SimpleShell {
     public static void main(String[] args) throws java.io.IOException {
         IdController idController = new IdController();
         MessageController messageController = new MessageController();
-        TransactionController transactionController = new TransactionController();
 
         //YouAreEll webber = new YouAreEll(messageController, idController);
         
@@ -73,27 +72,21 @@ public class SimpleShell {
 
                 // ids
                 if (list.contains("ids") && list.size() == 3) {
-                    Id id = new Id(list.get(1), list.get(2));
-                    Id foundId = idController.findById(id);
+                    Id foundId = idController.findByGitId(list.get(1));
                     if (foundId == null) {
-                        idController.postId(id);
+                        idController.postId(new Id(list.get(1), list.get(2)));
                     } else {
-                        idController.putId(id);
+                        String newName = list.get(2);
+                        foundId.setName(newName);
+                        idController.putId(foundId);
                     }
-                    SimpleShell.prettyPrint(id.getName() + " " + id.getGithub());
                     continue;
                 }
-//                if (list.contains("update") && list.size() == 4) {
-//                    Id id = new Id(list.get(2), list.get(3));
-//                    Id result = idController.postId(id);
-//                    SimpleShell.prettyPrint(result.getName() + " " + result.getGithub());
-//                    continue;
-//                }
                 if (list.contains("ids")) {
                     ArrayList<Id> results = idController.parseIds(idController.getIds());
 
                     for (Id idInResults : results) {
-                        SimpleShell.prettyPrint(idInResults.getUserid() + " " + idInResults.getGithub() + " " + idInResults.getName() + "\n");
+                        SimpleShell.prettyPrint(idInResults.getGithub() + " " + idInResults.getName() + "\n");
                     } continue;
                 }
 
