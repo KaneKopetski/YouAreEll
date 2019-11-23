@@ -9,6 +9,8 @@ import java.util.List;
 
 import controllers.IdController;
 import controllers.MessageController;
+import controllers.TransactionController;
+import models.Id;
 import youareell.YouAreEll;
 
 // Simple Shell is a Console view for youareell.YouAreEll.
@@ -20,8 +22,11 @@ public class SimpleShell {
         System.out.println(output);
     }
     public static void main(String[] args) throws java.io.IOException {
+        IdController idController = new IdController();
+        MessageController messageController = new MessageController();
+        TransactionController transactionController = new TransactionController();
 
-        YouAreEll webber = new YouAreEll(new MessageController(), new IdController());
+        //YouAreEll webber = new YouAreEll(messageController, idController);
         
         String commandLine;
         BufferedReader console = new BufferedReader
@@ -67,16 +72,35 @@ public class SimpleShell {
                 // Specific Commands.
 
                 // ids
-                if (list.contains("ids")) {
-                    String results = webber.get_ids();
-                    SimpleShell.prettyPrint(results);
+                if (list.contains("ids") && list.size() == 3) {
+                    Id id = new Id(list.get(1), list.get(2));
+                    Id foundId = idController.findById(id);
+                    if (foundId == null) {
+                        idController.postId(id);
+                    } else {
+                        idController.putId(id);
+                    }
+                    SimpleShell.prettyPrint(id.getName() + " " + id.getGithub());
                     continue;
+                }
+//                if (list.contains("update") && list.size() == 4) {
+//                    Id id = new Id(list.get(2), list.get(3));
+//                    Id result = idController.postId(id);
+//                    SimpleShell.prettyPrint(result.getName() + " " + result.getGithub());
+//                    continue;
+//                }
+                if (list.contains("ids")) {
+                    ArrayList<Id> results = idController.parseIds(idController.getIds());
+
+                    for (Id idInResults : results) {
+                        SimpleShell.prettyPrint(idInResults.getUserid() + " " + idInResults.getGithub() + " " + idInResults.getName() + "\n");
+                    } continue;
                 }
 
                 // messages
                 if (list.contains("messages")) {
-                    String results = webber.get_messages();
-                    SimpleShell.prettyPrint(results);
+                    ArrayList results = messageController.getMessages();
+                    SimpleShell.prettyPrint(results.toString());
                     continue;
                 }
                 // you need to add a bunch more.
