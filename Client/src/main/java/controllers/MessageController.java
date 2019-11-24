@@ -1,35 +1,31 @@
 package controllers;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import kong.unirest.HttpResponse;
-import kong.unirest.JsonNode;
-import kong.unirest.Unirest;
-import kong.unirest.json.JSONArray;
 import models.Id;
 import models.Message;
 
 public class MessageController {
+    TransactionController transactionController = new TransactionController();
 
     private HashSet<Message> messagesSeen;
     // why a HashSet??
 
-//URL: http://zipcode.rocks:8085/messages/
     public ArrayList<Message> getMessages() {
-
-//        JsonNode responseBody = jsonResponse.getBody();
-//        JSONArray jsonArray = responseBody.getArray();
-//        ArrayList<Message> messageList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<Message>>(){}.getType());
-//        return messageList;
-        return null;
+        String messages = transactionController.makeURLCall("/messages", "GET", "");
+        Type listType = new TypeToken<List<Message>>(){}.getType();
+        return new Gson().fromJson(messages, listType);
     }
 
-    public ArrayList<Message> getMessagesForId(Id Id) {
-        return null;
+    public ArrayList<Message> getMessagesForId(Id id) {
+        String targetId = id.getGithub();
+        String messages = transactionController.makeURLCall("/ids/" + targetId + "/messages", "GET", "");
+        Type listType = new TypeToken<List<Message>>(){}.getType();
+        return new Gson().fromJson(messages, listType);
     }
 
     public Message getMessageForSequence(String seq) {
@@ -43,5 +39,15 @@ public class MessageController {
     public Message postMessage(Id myId, Id toId, Message msg) {
         return null;
     }
- 
+
+    public String toString(ArrayList<Message> messages) {
+        StringBuilder sb = new StringBuilder();
+        for (Message message : messages) {
+            sb.append("sequence: " + message.getSequence() + "\n" +
+                    "timestamp: " + message.getTimestamp() + "\n" +
+                    "fromid: " + message.getFromid() + "\n" +
+                    "toid: " + message.getToid() + " \n" +
+                    "message: " + message.getMessage() + "\n\n");
+        } return sb.toString();
+    }
 }

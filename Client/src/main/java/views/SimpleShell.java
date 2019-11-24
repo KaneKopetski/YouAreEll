@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import controllers.IdController;
 import controllers.MessageController;
 import controllers.TransactionController;
 import models.Id;
+import models.Message;
 import youareell.YouAreEll;
 
 // Simple Shell is a Console view for youareell.YouAreEll.
@@ -91,9 +93,15 @@ public class SimpleShell {
                 }
 
                 // messages
+                if (list.contains("messages") && list.size() == 2) {
+                    Id foundId = idController.findByGitId(list.get(1));
+                    ArrayList<Message> messages = messageController.getMessagesForId(foundId);
+                    SimpleShell.prettyPrint(messageController.toString(messages));
+                    continue;
+                }
                 if (list.contains("messages")) {
-                    ArrayList results = messageController.getMessages();
-                    SimpleShell.prettyPrint(results.toString());
+                    ArrayList<Message> messages = messageController.getMessages();
+                    SimpleShell.prettyPrint(messageController.toString(messages));
                     continue;
                 }
                 // you need to add a bunch more.

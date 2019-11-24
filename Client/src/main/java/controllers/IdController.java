@@ -50,8 +50,6 @@ public class IdController {
         for (Id idInList : idList) {
             if (gitId.equals(idInList.getGithub())) {
                 foundId = idInList;
-            } else {
-                foundId = null;
             }
         } return foundId;
     }
