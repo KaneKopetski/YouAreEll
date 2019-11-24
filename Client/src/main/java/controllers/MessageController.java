@@ -34,12 +34,11 @@ public class MessageController {
 
     //TODO finish this up after post
     public ArrayList<Message> getMessagesFromFriend(Id myId, Id friendId) {
-//        String targetId = myId.getGithub();
-//        String friendIdGit = friendId.getGithub();
-//        String messages = transactionController.makeURLCall("/ids/" + targetId + "/from/" + friendIdGit, "GET", "");
-//        Type listType = new TypeToken<List<Message>>(){}.getType();
-//        return new Gson().fromJson(messages, listType);
-        return null;
+        String targetId = myId.getGithub();
+        String friendIdGit = friendId.getGithub();
+        String messages = transactionController.makeURLCall("/ids/" + targetId + "/from/" + friendIdGit, "GET", "");
+        Type listType = new TypeToken<List<Message>>(){}.getType();
+        return new Gson().fromJson(messages, listType);
     }
 
     public Message postMessage(Id myId, Id toId, Message msg) {
