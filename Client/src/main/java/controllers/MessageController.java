@@ -28,16 +28,25 @@ public class MessageController {
         return new Gson().fromJson(messages, listType);
     }
 
-    public Message getMessageForSequence(String seq) {
+    public Message getMessageForSequence(String seq, Id id) {
         return null;
     }
 
+    //TODO finish this up after post
     public ArrayList<Message> getMessagesFromFriend(Id myId, Id friendId) {
+//        String targetId = myId.getGithub();
+//        String friendIdGit = friendId.getGithub();
+//        String messages = transactionController.makeURLCall("/ids/" + targetId + "/from/" + friendIdGit, "GET", "");
+//        Type listType = new TypeToken<List<Message>>(){}.getType();
+//        return new Gson().fromJson(messages, listType);
         return null;
     }
 
     public Message postMessage(Id myId, Id toId, Message msg) {
-        return null;
+        String payload = new Gson().toJson(msg);
+        String myGitHub = myId.getGithub();
+        transactionController.makeURLCall("/ids/" + myGitHub + "/messages", "POST", payload);
+        return msg;
     }
 
     public String toString(ArrayList<Message> messages) {

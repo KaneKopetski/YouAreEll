@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import controllers.IdController;
 import controllers.MessageController;
@@ -93,6 +95,38 @@ public class SimpleShell {
                 }
 
                 // messages
+
+                if (list.contains("send") && list.contains("to")) {
+                    String[] messageArr = commandLine.split("'");
+                    String messageText = messageArr[1];
+                    String fromGitId = list.get(1);
+                    String toGitId = list.get(list.size()-1);
+
+                    Id fromid = idController.findByGitId(fromGitId);
+                    Id toid = idController.findByGitId(toGitId);
+
+                    Message message = new Message(messageText, fromGitId, toGitId);
+                    messageController.postMessage(fromid, toid, message);
+                    continue;
+                }
+                if (list.contains("send")) {
+                    String[] messageArr = commandLine.split("'");
+                    String messageText = messageArr[1];
+                    String fromGitId = list.get(1);
+
+                    Id fromid = idController.findByGitId(fromGitId);
+
+                    Message message = new Message(messageText, fromGitId , "");
+                    messageController.postMessage(fromid, null , message);
+                    continue;
+                }
+                if (list.contains("messages") && list.size() == 3) {
+                    Id myId = idController.findByGitId(list.get(1));
+                    Id friendId = idController.findByGitId(list.get(2));
+                    ArrayList<Message> messages = messageController.getMessagesFromFriend(myId, friendId);
+                    SimpleShell.prettyPrint(messageController.toString(messages));
+                    continue;
+                }
                 if (list.contains("messages") && list.size() == 2) {
                     Id foundId = idController.findByGitId(list.get(1));
                     ArrayList<Message> messages = messageController.getMessagesForId(foundId);
